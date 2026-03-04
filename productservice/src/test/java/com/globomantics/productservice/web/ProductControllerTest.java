@@ -134,4 +134,21 @@ class ProductControllerTest {
                 .andExpect(jsonPath("$.quantity", is(10)))
                 .andExpect(jsonPath("$.version", is(2)));
     }
+
+    @Test
+    @DisplayName("PUT /product/1 - Version Mismatch")
+    void testProdcutPutVersionMismatch() throws Exception {
+       // Setup mocked service
+       Product putProduct = new Product(1, "Product Name", 10);
+       Product mockProduct = new Product(1, "Product Name", 10, 2);
+       doReturn(Optional.of(mockProduct)).when(service).findById(1);
+
+       mockMvc.perform(put("/product/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(HttpHeaders.IF_MATCH, 1)
+                        .content(asJsonString(putProduct)))
+
+                // Validate the response code and content type
+                .andExpect(status().isConflict());
+    }
 }
