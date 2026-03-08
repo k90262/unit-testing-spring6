@@ -152,12 +152,14 @@ public class ProductController {
         // Get the existing product
         Optional<Product> existingProduct = productService.findById(id);
 
+        // Delete the product if it exists in the database
         return existingProduct.map(p -> {
             if (productService.delete(p.getId())) {
                 return ResponseEntity.ok().build();
             } else {
+                // An error occurred during deletion, return an error response
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
-        }).orElse(ResponseEntity.notFound().build());
+        }).orElse(ResponseEntity.notFound().build()); // Return a 404 if the product does not exist
     }
 }

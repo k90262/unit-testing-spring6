@@ -168,4 +168,45 @@ class ProductControllerTest {
                 .andExpect(status().isNotFound());
 
     }
+
+    @Test
+    @DisplayName("DELETE /product/1 - Success")
+    void testProductDeleteSuccess() throws Exception {
+        // Setup mocked product
+        Product mockProduct = new Product(1, "Product Name", 10, 1);
+
+        // Setup mocked service
+        doReturn(Optional.of(mockProduct)).when(service).findById(1);
+        doReturn(true).when(service).delete(1);
+
+        // Execute our DELETE request
+        mockMvc.perform(delete("/product/1"))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    @DisplayName("DELETE /product/1 - Not Found")
+    void testProductDeleteNotFound() throws Exception {
+        // Setup mocked service
+        doReturn(Optional.empty()).when(service).findById(1);
+
+        // Execute our DELETE request
+        mockMvc.perform(delete("/product/1"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("DELETE /product/1 - Failure")
+    void testProductDeleteFailure() throws Exception {
+        // Setup mocked product
+        Product mockProduct = new Product(1, "Product Name", 10, 1);
+
+        // Setup mocked service
+        doReturn(Optional.of(mockProduct)).when(service).findById(1);
+        doReturn(false).when(service).delete(1);
+
+        // Execute our DELETE request
+        mockMvc.perform(delete("/product/1"))
+                .andExpect(status().isInternalServerError());
+    }
 }
