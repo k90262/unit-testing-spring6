@@ -81,7 +81,9 @@ class ProductControllerTest {
         Product mockProduct = new Product(1, "Product Name", 10, 1);
         doReturn(mockProduct).when(service).save(any());
 
-        mockMvc.perform(post("/product").contentType(MediaType.APPLICATION_JSON).content(asJsonString(postProduct)))
+        mockMvc.perform(post("/product")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(postProduct)))
 
                 // Validate the response code and content type
                 .andExpect(status().isCreated())
