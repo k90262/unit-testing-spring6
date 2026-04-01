@@ -57,4 +57,15 @@ class ProductRepositoryTest {
         assertEquals(5, foundProduct.getQuantity().intValue(), "Product quantity should be 5");
         assertEquals(2, foundProduct.getVersion().intValue(), "Product version should be 2");
     }
+
+    @Test
+    @DataSet("products.yml")
+    void testFindByIdNotFound()
+    {
+        // Find the product with ID 999
+        Optional<Product> product = repository.findById(999);
+
+        // Validate that we didn't find it
+        assertFalse(product.isPresent(), "Product with ID 999 should not exist");
+    }
 }
