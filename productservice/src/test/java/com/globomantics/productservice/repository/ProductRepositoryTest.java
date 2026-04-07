@@ -65,4 +65,25 @@ class ProductRepositoryTest {
     // Validate that we didn't find it
     assertFalse(product.isPresent(), "Product with ID 999 should not exist");
   }
+
+  @Test
+  @DataSet("products.yml")
+  void testSave() {
+    // Create a new product and save it to the database
+    Product product = new Product("Product 3", 10);
+    product.setVersion(1);
+    Product savedProduct = repository.save(product);
+
+    // Validate the saved product
+    assertNotNull(savedProduct, "Saved product should not be null");
+    assertEquals("Product 3", savedProduct.getName(), "Saved product name should match");
+    assertEquals(10, savedProduct.getQuantity(), "Saved product quantity should match");
+
+    // Validate that we can get it back out of the database
+    Optional<Product> foundProduct = repository.findById(savedProduct.getId());
+    assertTrue(foundProduct.isPresent(), "Product should exist in the database");
+    assertEquals("Product 3", foundProduct.get().getName(), "Product name does not match");
+    assertEquals(10, foundProduct.get().getQuantity(), "Product quantity does not match");
+    assertEquals(1, foundProduct.get().getVersion(), "Product version is incorrect");
+  }
 }
