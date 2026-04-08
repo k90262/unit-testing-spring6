@@ -86,4 +86,25 @@ class ProductRepositoryTest {
     assertEquals(10, foundProduct.get().getQuantity(), "Product quantity does not match");
     assertEquals(1, foundProduct.get().getVersion(), "Product version is incorrect");
   }
+
+  @Test
+  @DataSet("products.yml")
+  void testUpdateSuccess() {
+    // Update product 200
+    Product product = repository.findById(200).get();
+    product.setName("Product 2 Updated");
+    product.setQuantity(10);
+    product.setVersion(5);
+    boolean result = repository.update(product);
+
+    // Validate the update operation
+    assertTrue(result, "Update operation should return true for successful update");
+
+    // Validate that the product was updated in the database
+    Optional<Product> updatedProduct = repository.findById(200);
+    assertTrue(updatedProduct.isPresent(), "Updated product should exist in the database");
+    assertEquals("Product 2 Updated", updatedProduct.get().getName(), "Product name does not match");
+    assertEquals(10, updatedProduct.get().getQuantity(), "Product quantity should now be 10");
+    assertEquals(5, updatedProduct.get().getVersion(), "Product version should now be 5");
+  }
 }
