@@ -107,4 +107,15 @@ class ProductRepositoryTest {
     assertEquals(10, updatedProduct.get().getQuantity(), "Product quantity should now be 10");
     assertEquals(5, updatedProduct.get().getVersion(), "Product version should now be 5");
   }
+
+  @Test
+  @DataSet("products.yml")
+  void testUpdateFailure() {
+    // Update product 300's name, quantity, and version (not in the database)
+    Product product = new Product(300, "Product 3 Updated", 10, 10);
+    boolean result = repository.update(product);
+
+    // Validate the update operation
+    assertFalse(result, "Update operation should return false for failed update");
+  }
 }
