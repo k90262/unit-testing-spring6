@@ -118,4 +118,21 @@ class ProductRepositoryTest {
     // Validate the update operation
     assertFalse(result, "Update operation should return false for failed update");
   }
+
+  @Test
+  @DataSet("products.yml")
+  void testDeleteSuccess() {
+    boolean result = repository.delete(200);
+    assertTrue(result, "Delete operation should return true for successful delete");
+
+    Optional<Product> product = repository.findById(200);
+    assertFalse(product.isPresent(), "Deleted product should not exist in the database");
+  }
+
+  @Test
+  @DataSet("products.yml")
+  void testDeleteFailure() {
+    boolean result = repository.delete(400);
+    assertFalse(result, "Delete operation should return false for non-existent product");
+  }
 }
